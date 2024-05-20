@@ -1,5 +1,5 @@
 require("express-async-errors")
-const database = require("./database/sqlite") // coloca em uma variavel para depois fazer a instanciação da função que realiza a coneção com o banco de dados
+const migrationsRun = require("./database/sqlite/migrations") // coloca em uma variavel para depois fazer a instanciação da função que realiza a coneção com o banco de dados
 
 const AppError = require("./utils/AppError")
 
@@ -7,12 +7,12 @@ const express = require("express")
 
 const routes = require("./routes")
 
+migrationsRun();
+
 const app = express();
 app.use(express.json())
 
 app.use(routes)
-
-database();
 
 app.use((error, request, response, next)=>{ // sempre utilizar esses parametros nessa sequencia para extrair os erros
   if(error instanceof AppError){
